@@ -83,18 +83,19 @@ def read_input_file(board):
 
     # Add blocks to grid
     # initial positions
-    # grid_text_x = 1
     grid_text_y = 1
     for line in grid_text:
-        # set x back to 1 for every line
-        grid_text_x = 1
+        grid_line = [0]
         for letter in line:
             # put letter into correct size grid
-            grid[grid_text_y][grid_text_x] = letter
-            grid_text_x = grid_text_x + 2
+            grid_line.append(letter)
+            grid_line.append(0)
         # increment
+        grid[grid_text_y] = grid_line
         grid_text_y = grid_text_y + 2
 
+    return grid
 
 if __name__ == '__main__':
-    board_solver('mad_1.bff')
+    read_input_file('mad_1.bff')
+#     board_solver('mad_1.bff')
