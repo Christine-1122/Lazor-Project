@@ -4,6 +4,7 @@ EN.540.635
 Tianxin Zhang & Cameron Czerpak
 '''
 
+import os
 import numpy
 import scipy 
 import matplotlib.pyplot as plt
@@ -185,6 +186,30 @@ def in_array(grid_x_len, grid_y_len, lazor_pos_x, lazor_pos_y):
     # too
     return (lazor_pos_x >= 0 and lazor_pos_x < grid_x_len and
             lazor_pos_y >= 0 and lazor_pos_y < grid_y_len)
+
+def out_to_solution(file_path, solution, grid):
+    '''
+    This is a function to output the solution to a text file
+    to show where the blocks need to present for solution
+    :param file_path: the file path for the bff file
+    :param solution: the solution generated
+    :param grid: the board for the game
+    :no return in this case
+    '''
+    output = file_path.split('.')[0]+'_solution.txt'
+    name = file_path.split('.')[0].split(os.sep)[1]
+    file_1 = open(outpot, 'w')
+    file_1.write("Plese look at the solution for %s \n" % name)
+    for sol in solution:
+        c = s[0]
+        grid[c[1]][c[0]] = sol[1]
+    for i in grid:
+        for xi in i:
+            file_1.write(xi + '\t')
+        file_1.write('\n')
+    file_1.close()
+    print('Solution: %s and output file: %s. \n' % (name,output))
+    
 
 def board_solver_process(board):
     '''
