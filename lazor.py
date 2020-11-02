@@ -85,6 +85,38 @@ class Lazor_class(object):
         '''
         uses block type to determine info on lazor we need for solving
         '''
+        # Read grid with ABC etc
+
+        # While loop
+        # Add direction to initial position
+        # while in_array is true
+        # the lazor is in the array
+
+            # Add the diredtion to current position
+
+            # check if current position is 0 or 1
+            # if 0, lazor can travel there
+            # change 0 to 1 to show lazor
+            # is there, continue
+
+            # if A its a reflect block
+            # call reflect block to
+            # change direction, but don;t change letter
+            # on grid
+
+            # if it's opaque call opaque_block and
+            # stop lazor
+
+            # if refract, call refract block
+            # call lazor data again with new direciton
+            # and continue with current direction
+
+        # Check if intersect_points have gone from
+        # 0 to 1
+        # if true output solutions as a text file
+        #
+        # if not true, repeate with new grid
+        # next loop of board_solver_process
 
 
 def read_input_file(board):
