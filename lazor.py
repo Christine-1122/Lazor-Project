@@ -34,6 +34,28 @@ class Lazor_class(object):
         print(self.initial_pos)
         print("Lazor Initial Direction")
         print(self.direction)
+        
+    def reflect_block(self, direction, grid):
+        '''
+        update direction if lazor hits reflect block
+        during lazor data
+        '''
+
+    def refract_block(self, direction, grid):
+        '''
+        splits lazor direction into 2 paths
+        during lazor data
+        '''
+
+    def opaque_block(self, drection, grid):
+        '''
+        Stops lazor movement during lazor data
+        '''
+
+    def lazor_data(self, grid):
+        '''
+        uses block type to determine info on lazor we need for solving
+        '''
 
 
 def read_input_file(board):
@@ -86,22 +108,22 @@ def read_input_file(board):
     # Source
     # (https://stackoverflow.com/questions/7108080/
     # python-get-the-first-character-of-the-first-string-in-a-list)
-    grid_x_length = len(grid_text[0])
-    grid_y_length = len(grid_text)
+    grid_x_len = len(grid_text[0])
+    grid_y_len = len(grid_text)
     # convert grid text size to actual grid size
-    grid_x_length = grid_x_length * 2 + 1
-    grid_y_length = grid_y_length * 2 + 1
+    grid_x_len = grid_x_len * 2 + 1
+    grid_y_len = grid_y_len * 2 + 1
 
     # make grid of correct size zeros
     # Source
     # https://stackoverflow.com/questions/13157961/2d-array-of-zeros
-    grid = [[0] * grid_x_length] * grid_y_length
+    grid = [[0] * grid_x_len] * grid_y_len
 
     # Add blocks to grid
-    # initial positions
     grid_text_y = 1
     for line in grid_text:
         grid_line = [0]
+        # grid_text_x = 1
         for letter in line:
             # put letter into correct size grid
             grid_line.append(letter)
@@ -134,7 +156,35 @@ def read_input_file(board):
     print(block_count)
     print(intersect_points)
     print(lazor_list_read)
-    return grid, block_count, intersect_points, lazor_list_read
+    return (grid, block_count, intersect_points, lazor_list_read,
+            grid_x_len, grid_y_len)
+
+def in_array(grid_x_len, grid_y_len, lazor_pos_x, lazor_pos_y):
+    '''
+    Adapted from Weekly Challenge 7 Given code "def pos_chk(x, y, nBlocks):"
+    Validate if the coordinates specified (x and y) are within the maze.
+
+    **Parameters**
+
+        x: *int*
+            An x coordinate to check if it resides within the maze.
+        y: *int*
+            A y coordinate to check if it resides within the maze.
+        nBlocks: *int*
+            How many blocks wide the maze is.  Should be equivalent to
+            the length of the maze (ie. len(maze)).
+
+    **Returns**
+
+        valid: *bool*
+            Whether the coordiantes are valid (True) or not (False).
+    '''
+    # https://www.flake8rules.com/rules/W503.html
+    # Choosing current best practice
+    # Does show error but anit-pattern does
+    # too
+    return (lazor_pos_x >= 0 and lazor_pos_x < grid_x_len and
+            lazor_pos_y >= 0 and lazor_pos_y < grid_y_len)
 
 def board_solver_process(board):
     '''
