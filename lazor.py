@@ -8,6 +8,9 @@ import os
 import numpy
 import scipy 
 import matplotlib.pyplot as plt
+import time
+import numba as nb
+#numba here can extremely accelerate the code in pyhon
 
 class Lazor_class(object):
     '''
