@@ -13,7 +13,31 @@ import numba as nb
 #Using @git before functions
 #numba here can extremely accelerate the code in pyhon
 
+#f is file_name
+lazer = []
+intersect_point = []
+block = {}
+for line in open(f).readlines():
+    line = line.strip('\n')
+    if line == 'GRID START' or line == 'GRID STOP' or line[0] == '#' or line =='':
+        continue
+    elif line[0].isupper():
+        line = line.split(' ')
+        if line[0] == 'L':
+            #previous(initial step, next step (x+vx, y+vy))
+            lazer.append((line[1],line[2]),(line[1]+line[3], line[2]+line[4]))
+        elif line[0] == 'P':
+            intersect_point.append((line[1],line[2]))
+        else:
+            if line[1].isdigit():
+                block[line[0] = int(line[1])
+            else:
+                for i in line:
+                      if ##### Check other database 
+                      
+
 class Lazor_class(object):
+    #I guess we should have both Lazor class and Block class;
     '''
     Lazor class used for the solving
     Contains block movement and lazor movement
