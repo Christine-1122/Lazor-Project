@@ -247,7 +247,7 @@ def in_array(grid_x_len, grid_y_len, lazor_pos_x, lazor_pos_y):
     return (lazor_pos_x >= 0 and lazor_pos_x < grid_x_len and
             lazor_pos_y >= 0 and lazor_pos_y < grid_y_len)
 
-def out_to_solution(file_path, solution, grid):
+def out_to_solution(board, solution, grid):
     '''
     This is a function to output the solution to a text file
     to show where the blocks need to present for solution
@@ -256,8 +256,8 @@ def out_to_solution(file_path, solution, grid):
     :param grid: the board for the game
     :no return in this case
     '''
-    output = file_path.split('.')[0]+'_solution.txt'
-    name = file_path.split('.')[0].split(os.sep)[1]
+    output = board.split('.')[0]+'_solution.txt'
+    name = board.split('.')[0].split(os.sep)[1]
     file_1 = open(outpot, 'w')
     file_1.write("Plese look at the solution for %s \n" % name)
     for sol in solution:
