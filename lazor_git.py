@@ -6,126 +6,246 @@ Tianxin Zhang & Cameron Czerpak
 
 import os
 import numpy
-import scipy 
+import scipy
 import matplotlib.pyplot as plt
 import time
 import numba as nb
-#Using @git before functions
-#numba here can extremely accelerate the code in pyhon
+# Using @git before functions
+# numba here can extremely accelerate the code in pyhon
 
-#f is file_name
-# lazer = []
-# intersect_point = []
-# block = {}
-# for line in open(f).readlines():
-#     line = line.strip('\n')
-#     if line == 'GRID START' or line == 'GRID STOP' or line[0] == '#' or line =='':
-#         continue
-#     elif line[0].isupper():
-#         line = line.split(' ')
-#         if line[0] == 'L':
-#             #previous(initial step, next step (x+vx, y+vy))
-#             lazer.append((line[1],line[2]),(line[1]+line[3], line[2]+line[4]))
-#         elif line[0] == 'P':
-#             intersect_point.append((line[1],line[2]))
-#         else:
-#             if line[1].isdigit():
-#                 block[line[0] = int(line[1])
-#             else:
-#                 for i in line:
-#                       if ##### Check other database 
-                      
+
+# Create a new lazor every time
+def dis_between_points(pointa, pointb):
+    '''
+    This function creates to calculate the distance between two points
+    Return the distance between two points
+    '''
+    x = abs(pointa[0]-pointb[0])
+    y = abs(pointa[1]-pointb[1])
+    dis = np.sqrt(x**2+y**2)
+    return dis
+
+
 class Block:
-	'''
-	Creating Block class for opaque, reflect and fefract
-	'''
-	def __init__(self, block_count):
-		self.block_
+    '''
+    Creating Block class for opaque, reflect and fefract
+    '''
 
+    def __init__(self, block_items):
+        # Can put the x_grid_len and y_grid_len here
+        # Saving block type and position to the block_items dictionary
+        self.block_type = block_items[1]
+        self.block_position = block_items[0]
 
+    def generate_intersect(self):
+        '''
+        Generate all posible intersection
+        '''
+        x_limit = 2 * self.block_position[0]+1
+        y_limit = 2 * self.block_position[1]+1
+        possible_intersect_dictionary = {(x_limit, y_limit - 1): 'up', (x_limit, y_limit + 1): 'down', (x_limit-1, y_limit): 'left', (x_limit, y_limit - 1): 'right'}
+        possible_point = ((x_limit, y_limit - 1),
+                          (x_limit, y_limit + 1),
+                          (x_limit - 1, y_limit),
+                          (x_limit + 1, y_limit))
+        return possible_point, possible_intersect_dictionary
+
+    def find_intersection(self, lazor_start_finish):
+        '''
+        This function find intersection point on block
+        if count>1 means the lazor intersect
+        Also find how long the lazor travels
+        '''
+        dis = float('inf')  # Create an unbound upper value
+        intersect_point, intersect_dict = Block.generate_intersect(self)
+        count = 0
+        a = (np.nan, np.nan)
+        sol = [[i, dis_between_points(lazor_start_finish[0], i)] for i in intersect_point if Lazor(
+            lazor_start_finish).lazor_lintersect(i)]
+        sol = sorted(sol, key=lambda x: x[1])
+        len1 = len(sol)
+        print(len1)
+        if len1 != 0:
+            a, dis = sol[0]
+            count = len1
+        else:
+            pass
+        return a, intersect_point,  intersect_dict, count, dis
+
+    def reflect(self, lazor_start_finish):
+        a, intersect_point, intersect_dict, _, _ = Block.find_intersection(
+            self, lazor_start_finish)
+        sur = intersect_dict.get(a)
+        ori_dir = Lazor(lazor_start_finish).lazor_direction()
+        if all(np.isnan(a)) is True:
+            output = np.nan
+        else:
+            if sur = 'left' or sur = 'right':
+                new_dir = (-ori_dir[0], ori_dir[1])
+                output = (a[0]+new_dir[0], a[1]+new_dir[1])
+            else:
+                new_dir = (ori_dir[0], -ori_dir[1])
+                output = (a[0]+new_dir[0], a[1]+new_dir[1])
+        return(a, output),
+
+    def refrect(self, lazor_start_finish):
+        ori_dir = Lazor(lazor_start_finish).lazor_direction()
+        reflect_lazor = Block.reflect(self, lazor_start_finish)
+        if np.isnan(reflect_lazor[0][0][0]):
+            return reflect_lazor + ((np.nan, np.nan),)
+        else:
+            new = ((reflect_lazor[0][0][0]+ori_dir[0], reflect_lazor[0][0][1]+ori_dir[1]),
+                   (reflect_lazor[0][0][0] + 2 * ori_dir[0], reflect_lazor[0][0][1] + 2 * ori_dir[1]))
+            # time 2 to go through the REFRECT BLOCK
+            return reflect_lazor+(new,)
+
+    def opaque(self, lazor_start_finish):
+        a, _, _, _, _ = Block.find_intersection(self, lazor_start_finish)
+        return(a, np.nan),
+
+    def path(self, lazor_start_finish, dest):
+        '''
+        This is the function showed lazor path
+        '''
+        intersection, _, _, ints_num, dis = Block.find_intersection(
+            self, lazor_start_finish)
+        if all(np.isnan(intersection)) or ints_num == 1:
+            return dest, ((np.nan, np.nan),), ints_num, dis_between_points
+        else:
+            list_new = []
+            if self.block_type == "B":
+                new = Block.opaque(self, lazor_start_finish)
+            if self.block_type == "C":
+                new = Block.refrect(self, lazor_start_finish)
+            if self.block_type == "A":
+                new = Block.reflect(self, lazor_start_finish)
+            for i in destination:
+                if Lazor(lazor_start_finish).lazor_intersect(i) and is_array() == True:
+                    pass
+                else:
+                    list_new.append(i)
+            return list_new, new, ints_num, dis
 
 
 class Lazor_class(object):
-    #I guess we should have both Lazor class and Block class;
+    # I guess we should have both Lazor class and Block class;
     '''
     Lazor class used for the solving
     Contains block movement and lazor movement
     Also checks which intersect points have been
     crossed.
-    '''
+    # def __init__(self, initial_pos, direction):
+    #     
+    #     Initizalize lazor class with initial position
+    #     of the lazor and the direction it's pointed
+    #     ** Parameters **
+    #         initial_pos: **
+    #             Initial position of lazor
+    #         direction: **
+    #             Direction of lazor
+    #     '''
+    #     # Add direction and position to class
+    #     self.initial_pos = initial_pos
+    #     self.direction = direction
+    #     # Comment out in future
+    #     print("Lazor Initial Position")
+    #     print(self.initial_pos)
+    #     print("Lazor Initial Direction")
+    #     print(self.direction)
 
-    def __init__(self, initial_pos, direction):
+    def __init__(self, lazor_start_finish):
+        self.lazor_start_finish = lazor_start_finish
+        self.start = lazor_start_finish[0]
+        self.finish = lazor_start_finish[1]
+
+    def line(self):
         '''
-        Initizalize lazor class with initial position
-        of the lazor and the direction it's pointed
-        ** Parameters **
-            initial_pos: **
-                Initial position of lazor
-            direction: **
-                Direction of lazor
+        To calculate line slope and intersect
+        Return slope and intersect 
         '''
-        # Add direction and position to class
-        self.initial_pos = initial_pos
-        self.direction = direction
-        # Comment out in future
-        print("Lazor Initial Position")
-        print(self.initial_pos)
-        print("Lazor Initial Direction")
-        print(self.direction)
-        
-    def reflect_block(self, direction, grid):
+        k = (self.start[1]-self.end[1])/(self.start[0]-self.finish[0])
+        b = self.start[1]-k*self.start[0]
+        return k, b
+
+    def lazor_intersect(self, test_point):
         '''
-        update direction if lazor hits reflect block
-        during lazor data
+        Test if lazor pass through the test point
         '''
+        x1, y1 = test_point
+        k, b = Lazor.line(self)
+        direction = Lazor.lazor_direction(self)
+        distance = k * x1 - y1 + b
+        if test_point == self.start:
+            return True
+        else:
+            sx, sy = self.start
+            x_dis = x1-sx
+            y_dis = y1-sy
+            abs_x_dis = abs(x_dis)
+            abs_y_dis = abs(y_dis)
+            test_direction = (x_dis/abs_x_dis, y_dis/abs_y_dis)
 
-    def refract_block(self, direction, grid):
-        '''
-        splits lazor direction into 2 paths
-        during lazor data
-        '''
+            if distance == 0 and test_direction == direction:
+                return True
+            else:
+                return False
 
-    def opaque_block(self, drection, grid):
-        '''
-        Stops lazor movement during lazor data
-        '''
+        def lazor_direction(self):
+        return (self.finish[0]-self.start[0], self.finish[1]-self.start[1])
 
-    def lazor_data(self, grid):
-        '''
-        uses block type to determine info on lazor we need for solving
-        '''
-        # Read grid with ABC etc
+    # def reflect_block(self, direction, grid):
+    #     '''
+    #     update direction if lazor hits reflect block
+    #     during lazor data
+    #     '''
 
-        # While loop
-        # Add direction to initial position
-        # while in_array is true
-        # the lazor is in the array
+    # def refract_block(self, direction, grid):
+    #     '''
+    #     splits lazor direction into 2 paths
+    #     during lazor data
+    #     '''
 
-            # Add the diredtion to current position
+    # def opaque_block(self, drection, grid):
+    #     '''
+    #     Stops lazor movement during lazor data
+    #     '''
 
-            # check if current position is 0 or 1
-            # if 0, lazor can travel there
-            # change 0 to 1 to show lazor
-            # is there, continue
+    # def lazor_data(self, grid):
+    #     '''
+    #     uses block type to determine info on lazor we need for solving
+    #     '''
+    #     # Read grid with ABC etc
 
-            # if A its a reflect block
-            # call reflect block to
-            # change direction, but don;t change letter
-            # on grid
+    #     # While loop
+    #     # Add direction to initial position
+    #     # while in_array is true
+    #     # the lazor is in the array
 
-            # if it's opaque call opaque_block and
-            # stop lazor
+    #         # Add the diredtion to current position
 
-            # if refract, call refract block
-            # call lazor data again with new direciton
-            # and continue with current direction
+    #         # check if current position is 0 or 1
+    #         # if 0, lazor can travel there
+    #         # change 0 to 1 to show lazor
+    #         # is there, continue
 
-        # Check if intersect_points have gone from
-        # 0 to 1
-        # if true output solutions as a text file
-        #
-        # if not true, repeate with new grid
-        # next loop of board_solver_process
+    #         # if A its a reflect block
+    #         # call reflect block to
+    #         # change direction, but don;t change letter
+    #         # on grid
+
+    #         # if it's opaque call opaque_block and
+    #         # stop lazor
+
+    #         # if refract, call refract block
+    #         # call lazor data again with new direciton
+    #         # and continue with current direction
+
+    #     # Check if intersect_points have gone from
+    #     # 0 to 1
+    #     # if true output solutions as a text file
+    #     #
+    #     # if not true, repeate with new grid
+    #     # next loop of board_solver_process
 
 
 def read_input_file(board):
@@ -154,7 +274,7 @@ def read_input_file(board):
     # defined in
     lazor_list_read = []
     intersect_points = []
-    
+
     # open .bff file
     board_open = open(board, 'r')
     # read board file
@@ -183,7 +303,7 @@ def read_input_file(board):
     grid_x_len = grid_x_len * 2 + 1
     grid_y_len = grid_y_len * 2 + 1
 
-    #for mad_1.bff total of 9*9 as steps differences
+    # for mad_1.bff total of 9*9 as steps differences
 
     # make grid of correct size zeros
     # Source
@@ -197,7 +317,7 @@ def read_input_file(board):
     # Add blocks to grid
     grid_text_y = 1
     for line in grid_text:
-        grid_line = [0] 
+        grid_line = [0]
         # print("TEST GRID LINE")
         # print(grid_line)
         # print("\n")
@@ -233,9 +353,11 @@ def read_input_file(board):
     print(grid)
     print(block_count)
     print(intersect_points)
+    # This is the original start point and move direction
     print(lazor_list_read)
     return (grid, block_count, intersect_points, lazor_list_read,
             grid_x_len, grid_y_len)
+
 
 def in_array(grid_x_len, grid_y_len, lazor_pos_x, lazor_pos_y):
     '''
@@ -260,6 +382,7 @@ def in_array(grid_x_len, grid_y_len, lazor_pos_x, lazor_pos_y):
     return (lazor_pos_x >= 0 and lazor_pos_x < grid_x_len and
             lazor_pos_y >= 0 and lazor_pos_y < grid_y_len)
 
+
 def out_to_solution(board, solution, grid):
     '''
     This is a function to output the solution to a text file
@@ -281,8 +404,8 @@ def out_to_solution(board, solution, grid):
             file_1.write(xi + '\t')
         file_1.write('\n')
     file_1.close()
-    print('Solution: %s and output file: %s. \n' % (name,output))
-    
+    print('Solution: %s and output file: %s. \n' % (name, output))
+
 
 def board_solver_process(board):
     '''
@@ -306,6 +429,7 @@ def board_solver_process(board):
     # begin testing
 
     # save solution
+
 
 if __name__ == '__main__':
     read_input_file('mad_1.bff')
