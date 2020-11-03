@@ -174,22 +174,65 @@ def board_solver_process(board):
             for ai in range(block_count.get('B')):
                 block_list.append('B')
 
-    # for loop trying every combination of available
-    # block locations
-    # for i, func in enumerate(self.function_list):
-    for i in itertools.permutations(o_locations):
-        # print(i)
-        # Assign letters from block list to
-        # the first locations of the permutation
-        # Then replace that value in the grid
+    ##################################
+    # Need to add a faster solving method
+    # place blocks where the lazor goes
+    # current code takes too long
+    #
+
+    # intertools permutations is way too slow
+    # for i in itertools.permutations(o_locations[:3]):
+    # for i in itertools.permutations(o_locations):
+    # tries_list = []
+    # Random actually works much faster
+    unsolved = True
+    iterations = 1
+    while unsolved:
+        i = random.sample(o_locations, len(block_list))
+        # tries_list.append(i)
+        # if i in tries_list:
+        #     continue
+
         for j in range(len(block_list)):
+            # print(j)
             block_xy = i[j]
             i_x = block_xy[0]
             i_y = block_xy[1]
             grid[i_y][i_x] = block_list[j]
 
         # We now have our grid that we want to test
-        # 
+        #
+        solve = ######################### Add your code
+        if solve:
+            print("Grid Solution")
+            print(np.matrix(grid))
+            t2 = time.time()
+            print('Iterations = %s' % iterations)
+            time_elapsed = t2 - t1
+            print('Time Elapsed = %s' % time_elapsed)
+            print("Solution saved as txt file")
+            # Write solution file
+            board_solution = board_name + "solution.txt"
+            f = open(board_solution, 'w')
+            solution_grid = []
+            for y in range(1, len(grid), 2):
+                for x in grid[y]:
+                    if x == 0:
+                        grid[y].remove(x)
+                solution_grid.append(' '.join(grid[y]))
+            solution_grid = '\n'.join(solution_grid)
+            f.write(solution_grid)
+            f.close()
+            return
+
+        # Remove placed blocks from grid
+        # for the next loop
+        for j in range(len(block_list)):
+            block_xy = i[j]
+            i_x = block_xy[0]
+            i_y = block_xy[1]
+            grid[i_y][i_x] = 'o'
+        iterations = iterations + 1
         
 
 if __name__ == '__main__':
