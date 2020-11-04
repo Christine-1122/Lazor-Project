@@ -3,25 +3,24 @@ Software Carpentry Lazor Project
 EN.540.635
 Tianxin Zhang & Cameron Czerpak
 '''
-# Biden Switch Dream Number: DA-7286-5710-7478
-
-# Dictionary name of block number: block_count
-
 import os
 import numpy
 import scipy
 import matplotlib.pyplot as plt
 import time
 import numba as nb
+from itertools import combinations
 # Using @git before functions
 # numba here can extremely accelerate the code in pyhon
 # Randomly chooing the blocks
 # for i in itertools.permutations(o_location): which is really slow
-# Faster: unsolved = True
+# Faster:
+unsolved = True
 #  iterations = 1
 #  while unsolved:
 #  	i = random.sample(o_locations, len(block_list))
-# Fastest: follow the Lazor, and try each block on the lazor path A list like the maze homework
+# Fastest: follow the Lazor, and try each block on the lazor path
+# A list like the maze homework
 
 
 # Create a new lazor every time
@@ -30,9 +29,9 @@ def dis_between_points(pointa, pointb):
     This function creates to calculate the distance between two points
     Return the distance between two points
     '''
-    x = abs(pointa[0]-pointb[0])
-    y = abs(pointa[1]-pointb[1])
-    dis = np.sqrt(x**2+y**2)
+    x = abs(pointa[0] - pointb[0])
+    y = abs(pointa[1] - pointb[1])
+    dis = np.sqrt(x**2 + y**2)
     return dis
 
 
@@ -41,28 +40,29 @@ class Block:
     Creating Block class for opaque, reflect and fefract
     '''
 
-    def __init__(self, block_items):
+    def __init__(self, block_item):
         # Can put the x_grid_len and y_grid_len here
         # Saving block type and position to the block_items dictionary
-        self.block_type = block_items[1]
-        self.block_position = block_items[0]
+        self.block_type = block_item[1]
+        self.block_position = block_item[0]
 
     def generate_intersect(self):
         '''
         Generate all posible intersection
         '''
-        x_limit = 2 * self.block_position[0]+1
-        y_limit = 2 * self.block_position[1]+1
-        possible_intersect_dictionary = {(x_limit, y_limit - 1): 'up', (x_limit, y_limit + 1): 'down', (x_limit-1, y_limit): 'left', (x_limit, y_limit - 1): 'right'}
-        possible_point = ((x_limit, y_limit - 1),
-                          (x_limit, y_limit + 1),
-                          (x_limit - 1, y_limit),
-                          (x_limit + 1, y_limit))
+        x_step = self.block_position[0]
+        y_step = self.block_position[1]
+        possible_intersect_dictionary = {(x_step , y_step  - 1): 'up', (x_step , y_step  + 1)
+                                          : 'down', (x_step  - 1, y_step): 'left', (x_step , y_step  - 1): 'right'}
+        possible_point = ((x_step, y_step - 1),
+                          (x_step, y_step + 1),
+                          (x_step - 1, y_step),
+                          (x_step + 1, y_step))
         return possible_point, possible_intersect_dictionary
 
     def find_intersection(self, lazor_start_finish):
         '''
-        This function find intersection point on block
+        This function find intersection point for given lasor
         if count>1 means the lazor intersect
         Also find how long the lazor travels
         '''
@@ -70,6 +70,7 @@ class Block:
         intersect_point, intersect_dict = Block.generate_intersect(self)
         count = 0
         a = (np.nan, np.nan)
+        #Find out if an intersection occured
         sol = [[i, dis_between_points(lazor_start_finish[0], i)] for i in intersect_point if Lazor(
             lazor_start_finish).lazor_lintersect(i)]
         sol = sorted(sol, key=lambda x: x[1])
@@ -80,7 +81,7 @@ class Block:
             count = len1
         else:
             pass
-        return a, intersect_point,  intersect_dict, count, dis
+        return a, intersect_point, intersect_dict, count, dis
 
     def reflect(self, lazor_start_finish):
         a, intersect_point, intersect_dict, _, _ = Block.find_intersection(
@@ -92,10 +93,10 @@ class Block:
         else:
             if sur == 'left' or sur == 'right':
                 new_dir = (-ori_dir[0], ori_dir[1])
-                output = (a[0]+new_dir[0], a[1]+new_dir[1])
+                output = (a[0] + new_dir[0], a[1] + new_dir[1])
             else:
                 new_dir = (ori_dir[0], -ori_dir[1])
-                output = (a[0]+new_dir[0], a[1]+new_dir[1])
+                output = (a[0] + new_dir[0], a[1] + new_dir[1])
         return(a, output),
 
     def refrect(self, lazor_start_finish):
@@ -104,10 +105,10 @@ class Block:
         if np.isnan(reflect_lazor[0][0][0]):
             return reflect_lazor + ((np.nan, np.nan),)
         else:
-            new = ((reflect_lazor[0][0][0]+ori_dir[0], reflect_lazor[0][0][1]+ori_dir[1]),
+            new = ((reflect_lazor[0][0][0] + ori_dir[0], reflect_lazor[0][0][1] + ori_dir[1]),
                    (reflect_lazor[0][0][0] + 2 * ori_dir[0], reflect_lazor[0][0][1] + 2 * ori_dir[1]))
             # time 2 to go through the REFRECT BLOCK
-            return reflect_lazor+(new,)
+            return reflect_lazor + (new,)
 
     def opaque(self, lazor_start_finish):
         # opaque block turns in array false
@@ -139,32 +140,8 @@ class Block:
             return list_new, new, ints_num, dis
 
 
-class Lazor_class(object):
-    # I guess we should have both Lazor class and Block class;
-    '''
-    Lazor class used for the solving
-    Contains block movement and lazor movement
-    Also checks which intersect points have been
-    crossed.
-    def __init__(self, initial_pos, direction):
-
-        Initizalize lazor class with initial position
-        of the lazor and the direction it's pointed
-        ** Parameters **
-            initial_pos: **
-                Initial position of lazor
-            direction: **
-                Direction of lazor
-    '''
-    # Add direction and position to class
-    # self.initial_pos = initial_pos
-    # self.direction = direction
-    # # Comment out in future
-    # print("Lazor Initial Position")
-    # print(self.initial_pos)
-    # print("Lazor Initial Direction")
-    # print(self.direction)
-
+class Lazor:
+	
     def __init__(self, lazor_start_finish):
         self.lazor_start_finish = lazor_start_finish
         self.start = lazor_start_finish[0]
@@ -173,10 +150,10 @@ class Lazor_class(object):
     def line(self):
         '''
         To calculate line slope and intersect
-        Return slope and intersect 
+        Return slope and intersect
         '''
-        k = (self.start[1]-self.finish[1])/(self.start[0]-self.finish[0])
-        b = self.start[1]-k*self.start[0]
+        k = (self.start[1] - self.finish[1]) / (self.start[0] - self.finish[0])
+        b = self.start[1] - k * self.start[0]
         return k, b
 
     def lazor_intersect(self, test_point):  # P is the test_point
@@ -186,80 +163,26 @@ class Lazor_class(object):
         x1, y1 = test_point
         k, b = Lazor.line(self)
         direction = Lazor.lazor_direction(self)  # a tuple
-        distance = k * x1 - y1 + b
+        dis = k * x1 - y1 + b
         if test_point == self.start:
             return True
         else:
             sx, sy = self.start
-            x_dif = x1-sx
-            y_dif = y1-sy
+            x_dif = x1 - sx
+            y_dif = y1 - sy
             abs_x_dif = abs(x_dif)
             abs_y_dif = abs(y_dif)
-            test_direction = (x_dif/abs_x_dif, y_dif/abs_y_dif)
+            test_direction = (x_dif / abs_x_dif, y_dif / abs_y_dif)
 
-            if distance == 0 and test_direction == direction:
+            if dis == 0 and test_direction == direction:
                 return True
             else:
                 return False
 
     def lazor_direction(self):
-        return (self.finish[0]-self.start[0], self.finish[1]-self.start[1])
+        return (self.finish[0] - self.start[0], self.finish[1] - self.start[1])
 
-    # def reflect_block(self, direction, grid):
-    #     '''
-    #     update direction if lazor hits reflect block
-    #     during lazor data
-    #     '''
-
-    # def refract_block(self, direction, grid):
-    #     '''
-    #     splits lazor direction into 2 paths
-    #     during lazor data
-    #     '''
-
-    # def opaque_block(self, drection, grid):
-    #     '''
-    #     Stops lazor movement during lazor data
-    #     '''
-
-    # def lazor_data(self, grid):
-    #     '''
-    #     uses block type to determine info on lazor we need for solving
-    #     '''
-    #     # Read grid with ABC etc
-
-    #     # While loop
-    #     # Add direction to initial position
-    #     # while in_array is true
-    #     # the lazor is in the array
-
-    #         # Add the diredtion to current position
-
-    #         # check if current position is 0 or 1
-    #         # if 0, lazor can travel there
-    #         # change 0 to 1 to show lazor
-    #         # is there, continue
-
-    #         # if A its a reflect block
-    #         # call reflect block to
-    #         # change direction, but don;t change letter
-    #         # on grid
-
-    #         # if it's opaque call opaque_block and
-    #         # stop lazor
-
-    #         # if refract, call refract block
-    #         # call lazor data again with new direciton
-    #         # and continue with current direction
-
-    #     # Check if intersect_points have gone from
-    #     # 0 to 1
-    #     # if true output solutions as a text file
-    #     #
-    #     # if not true, repeate with new grid
-    #     # next loop of board_solver_process
-
-
+    
 def read_input_file(board):
     '''
     Reads given input file
@@ -298,7 +221,7 @@ def read_input_file(board):
     # https://stackoverflow.com/questions/9347419/python-strip-with-n
     board_open = [line.replace('\n', '')
                   for line in board_open if line != '\n']
-    ######Logic here??? replace the \n in each sentence            
+    # Logic here??? replace the \n in each sentence
     # print(board_open)
     # print('\n')
 
@@ -354,13 +277,13 @@ def read_input_file(board):
         # print('\n')
         grid[grid_text_y] = grid_line
         grid_text_y = grid_text_y + 2
-        #Every other line show the result
+        # Every other line show the result
 
     # index rest of .bff file to find
     # block count, lazor, and interesct points
 
     for line in board_open[grid_end:]:
-    	# Start here we deal with fixed blocks, L and P
+        # Start here we deal with fixed blocks, L and P
         # if the beginning of the line isn't in
         # a block name, it must be lazor info
         # or intersecting point info
@@ -368,8 +291,8 @@ def read_input_file(board):
             if line[0] == 'L':  # A list
                 lazor_list_read.append(
                     [tuple(map(int, line.replace('L', '').split()[s:s + 2]))
-                     for s in [0, 2]])# Seperating into two parts: initial and direction
-                #######seems like s in [0,1] or [0,1] is same
+                     for s in [0, 2]])  # Seperating into two parts: initial and direction
+                # seems like s in [0,1] or [0,1] is same
             elif line[0] == 'P':  # is a list
                 intersect_points.append(
                     tuple(map(int, line.replace('P', '').split())))
@@ -389,19 +312,22 @@ def read_input_file(board):
     # Generate possible blocks that can put in the grid
     possible_position = []
     fixed_block = []
-    #Attention: first if grid then grid[0] otherwise will be error
+    # Attention: first if grid then grid[0] otherwise will be error
     for i in range(len(grid)):
-    	for j in range(len(grid[0])):
-    		if str(grid[i][j]) == 'o':
-    			possible_position.append((j,i))
-    		elif str(grid[i][j]).isupper():
-    			fixed_block.append(grid[j][i],(j,i))
+        for j in range(len(grid[0])):
+            if str(grid[i][j]) == 'o':
+                possible_position.append((j, i))
+            elif str(grid[i][j]).isupper():
+                fixed_block.append(((j, i), grid[i][j]))
+                # yarn_5: Fixed Blocks: 	[((3, 1), 'B'), ((1, 11), 'B')]
     print("possible_position \n")
     print(possible_position)
+    print("Fixed Blocks: \t")
     print(fixed_block)
     # Find out a way to delete all zero since it is not user friendly to look at possible_position
+    # adding possible position and fixed block for solving the algorithm
     return (grid, block_count, intersect_points, lazor_list_read,
-            grid_x_len, grid_y_len)
+            grid_x_len, grid_y_len, possible_position, fixed_block)
 
 
 def in_array(grid_x_len, grid_y_len, lazor_pos_x, lazor_pos_y):
@@ -437,7 +363,7 @@ def out_to_solution(board, solution, grid):
     :param grid: the board for the game
     :no return in this case
     '''
-    output = board.split('.')[0]+'_solution.txt'
+    output = board.split('.')[0] + '_solution.txt'
     name = board.split('.')[0].split(os.sep)[1]
     file_1 = open(outpot, 'w')
     file_1.write("Plese look at the solution for %s \n" % name)
@@ -460,21 +386,107 @@ def board_solver_process(board):
                 name of the .bff file we wish to solve
     '''
     # Read input file
-    grid, block_count, intersect_points, lazor_list_read = read_input_file(
-        board)
+    (grid, block_count, intersect_points, lazor_list_read, grid_x_len,
+    grid_y_len, possible_position, fixed_block) = read_input_file(board)
+
+    # print(sum_block)
+    # Check length of dictionary, remove the "0" value one
+    # https://stackoverflow.com/questions/17095163/remove-a-dictionary-key-that-has-a-certain-value
+    block_new = {k: v for k, v in block_count.items() if v != 0}
+    print(block_new)
+    sum_block_num = sum(block_new.values())
+    key_len = len(block_new.keys())
+    print(key_len)
+    key = list(block_new.keys())  # shows the available key lists
+    # for mad_1 A have 2 and C have 1;
+    value_first = list(block_new.values())[0]
+    # here showed A equals to 2
+    # print(value_first)
+    # print(key_len)
+    # print(block_new)
+    # if block_count.values() == 0:
+    # print(fixed_block)
+    for item in combinations(possible_position, sum_block_num):#groups of three
+    	# All posible combinations for sum of blocks
+    	if key_len == 1:  # Only one kind of block is available
+    		block_list = []
+    		for i in item:
+    			block_list.append((i, key[0]))
+    			# Only have the first key since deleted the key not showing up
+    			# [((9, 7), 'A'), ((1, 9), 'A'), ((3, 9), 'A'), ((5, 9), 'A'), ((7, 9), 'A'), ((9, 9), 'A')]
+    		block_list.extend(fixed_block)  # adding fixed block to block list
+    		# print(block_list)
+    	elif key_len == 2:  # 2 different kinds of keys/blocks
+    		block_list = []
+    		for i in combinations(item, value_first):#2 for A in mad_1
+    			key_1 = set(item)-set(i) #the left one not selected in group of three for mad_1
+    			# print(item)
+    			# print(i)
+    			# ((3, 7), (5, 7), (7, 7))
+				# ((5, 7), (7, 7))
+    			for j in i:
+    				# print(j)
+    				block_list.append((j, key[0]))
+    				# print(block_list)
+    				# [((3, 7), 'A'), ((5, 7), 'A'), ((7, 7), 'C'), ((3, 7), 'A'), ((7, 7), 'A'), ((5, 7), 'C'), ((5, 7), 'A'), ((7, 7), 'A')]
+    			for x_1 in key_1:
+    				block_list.append((x_1, key[1]))
+    				# print(block_list)
+    			block_list.extend(fixed_block)
+    print(block_list)
+
+    #Lazor possible destinations
+    count_1 = 0.0
+    dis = float('inf')
+    last_step = "None"
+    for block_sample in block_list:
+    	bl = Block(block_sample)
+    	_, new_lazor, count, new_dis = bl.path(lazor_start_finish,point)
+    	if count > 1:
+    		if new_dis < last_step:
+    			last_step = block_sample
+    			dis = new_dis
+    		else:
+    			pass
+    	else:
+    		count_1 += 1
+    #A block in lasor path
+    if last_step != 'None':
+    	bl = Block(last_step)
+    	point,new_lazor,count,_ = bl.path(lazor_start_finish,point)
+    	for i in new_lazor:
+    		try:
+    			len(i[1])
+    			lazor_use.append(i)
+    		except:
+    			pass
+    else:
+    	pass
+    #See if lazor intersect a destination point
+    if count_1 == len(block_list):block_list:
+    	point_new = [i for i in point if not Lazor(cord).lazor_intersect(i)]
+    	point = point_new
+
+
+
+    posible_points
+    #create lasor 
+    #create list have all destination
+    list_new1 = []
+    count = []
+    # whil True:
+    #Tracing lazor with updating lazor location; remove one if reaches grid upper bound
+    # lazor
+    return block_new, block_list
+
+
+
 
     # Add lazor list to lazor class
-    for lazor_list_index in lazor_list_read:
-        Lazor_class(lazor_list_index[0], lazor_list_index[1])
-
-    # Make every possible combination of solutions
-
-    # sort solutions by most likely to work
-
-    # begin testing
-
-    # save solution
+    # for lazor_list_index in lazor_list_read:
+    #     Lazor_class(lazor_list_index[0], lazor_list_index[1])
 
 
 if __name__ == '__main__':
-    read_input_file('mad_1.bff')
+    # read_input_file('mad_1.bff')
+    board_solver_process('mad_1.bff')
