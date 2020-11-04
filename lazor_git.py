@@ -331,10 +331,10 @@ def read_input_file(board):
     # Source
     # https://stackoverflow.com/questions/13157961/2d-array-of-zeros
     grid = [[0] * grid_x_len] * grid_y_len
-    print("The grid is : ")
-    print(grid)
+    # print("The grid is : ")
+    # print(grid)
     # print(len(grid))
-    print("\n")
+    # print("\n")
 
     # Add blocks to grid
     grid_text_y = 1
@@ -349,9 +349,9 @@ def read_input_file(board):
             grid_line.append(letter)
             grid_line.append(0)
         # increment
-        print("Grid Line")
-        print(grid_line)# 4 lines of [0 o 0 o]
-        print('\n')
+        # print("Grid Line")
+        # print(grid_line)# 4 lines of [0 o 0 o]
+        # print('\n')
         grid[grid_text_y] = grid_line
         grid_text_y = grid_text_y + 2
         #Every other line show the result
@@ -379,11 +379,27 @@ def read_input_file(board):
             # add number of block type to dictionary
             block_count[line[0]] = int(line[2])
     print(grid)
+    print('\n')
     print(block_count)
     print(intersect_points)
+
     # This is the original start point and move direction
-    print("\nLazor list read: ")
-    print(lazor_list_read)
+    # print("\nLazor list read: ")
+    # print(lazor_list_read)
+    # Generate possible blocks that can put in the grid
+    possible_position = []
+    fixed_block = []
+    #Attention: first if grid then grid[0] otherwise will be error
+    for i in range(len(grid)):
+    	for j in range(len(grid[0])):
+    		if str(grid[i][j]) == 'o':
+    			possible_position.append((j,i))
+    		elif str(grid[i][j]).isupper():
+    			fixed_block.append(grid[j][i],(j,i))
+    print("possible_position \n")
+    print(possible_position)
+    print(fixed_block)
+    # Find out a way to delete all zero since it is not user friendly to look at possible_position
     return (grid, block_count, intersect_points, lazor_list_read,
             grid_x_len, grid_y_len)
 
@@ -461,4 +477,4 @@ def board_solver_process(board):
 
 
 if __name__ == '__main__':
-    read_input_file('mad_7.bff')
+    read_input_file('mad_1.bff')
