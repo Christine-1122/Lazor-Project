@@ -3,6 +3,9 @@ Software Carpentry Lazor Project
 EN.540.635
 Tianxin Zhang & Cameron Czerpak
 '''
+# Biden Switch Dream Number: DA-7286-5710-7478
+
+# Dictionary name of block number: block_count
 
 import os
 import numpy
@@ -12,6 +15,13 @@ import time
 import numba as nb
 # Using @git before functions
 # numba here can extremely accelerate the code in pyhon
+# Randomly chooing the blocks
+# for i in itertools.permutations(o_location): which is really slow
+# Faster: unsolved = True
+#  iterations = 1
+#  while unsolved:
+#  	i = random.sample(o_locations, len(block_list))
+# Fastest: follow the Lazor, and try each block on the lazor path A list like the maze homework
 
 
 # Create a new lazor every time
@@ -80,7 +90,7 @@ class Block:
         if all(np.isnan(a)) is True:
             output = np.nan
         else:
-            if sur = 'left' or sur = 'right':
+            if sur == 'left' or sur == 'right':
                 new_dir = (-ori_dir[0], ori_dir[1])
                 output = (a[0]+new_dir[0], a[1]+new_dir[1])
             else:
@@ -100,6 +110,7 @@ class Block:
             return reflect_lazor+(new,)
 
     def opaque(self, lazor_start_finish):
+        # opaque block turns in array false
         a, _, _, _, _ = Block.find_intersection(self, lazor_start_finish)
         return(a, np.nan),
 
@@ -115,12 +126,13 @@ class Block:
             list_new = []
             if self.block_type == "B":
                 new = Block.opaque(self, lazor_start_finish)
-            if self.block_type == "C":
+            elif self.block_type == "C":
                 new = Block.refrect(self, lazor_start_finish)
-            if self.block_type == "A":
+            elif self.block_type == "A":
                 new = Block.reflect(self, lazor_start_finish)
             for i in destination:
-                if Lazor(lazor_start_finish).lazor_intersect(i) and is_array() == True:
+                # All the four parameters provided below
+                if Lazor(lazor_start_finish).lazor_intersect(i) and in_array() == True:
                     pass
                 else:
                     list_new.append(i)
@@ -134,24 +146,24 @@ class Lazor_class(object):
     Contains block movement and lazor movement
     Also checks which intersect points have been
     crossed.
-    # def __init__(self, initial_pos, direction):
-    #     
-    #     Initizalize lazor class with initial position
-    #     of the lazor and the direction it's pointed
-    #     ** Parameters **
-    #         initial_pos: **
-    #             Initial position of lazor
-    #         direction: **
-    #             Direction of lazor
-    #     '''
-    #     # Add direction and position to class
-    #     self.initial_pos = initial_pos
-    #     self.direction = direction
-    #     # Comment out in future
-    #     print("Lazor Initial Position")
-    #     print(self.initial_pos)
-    #     print("Lazor Initial Direction")
-    #     print(self.direction)
+    def __init__(self, initial_pos, direction):
+
+        Initizalize lazor class with initial position
+        of the lazor and the direction it's pointed
+        ** Parameters **
+            initial_pos: **
+                Initial position of lazor
+            direction: **
+                Direction of lazor
+    '''
+    # Add direction and position to class
+    # self.initial_pos = initial_pos
+    # self.direction = direction
+    # # Comment out in future
+    # print("Lazor Initial Position")
+    # print(self.initial_pos)
+    # print("Lazor Initial Direction")
+    # print(self.direction)
 
     def __init__(self, lazor_start_finish):
         self.lazor_start_finish = lazor_start_finish
@@ -163,34 +175,34 @@ class Lazor_class(object):
         To calculate line slope and intersect
         Return slope and intersect 
         '''
-        k = (self.start[1]-self.end[1])/(self.start[0]-self.finish[0])
+        k = (self.start[1]-self.finish[1])/(self.start[0]-self.finish[0])
         b = self.start[1]-k*self.start[0]
         return k, b
 
-    def lazor_intersect(self, test_point):
+    def lazor_intersect(self, test_point):  # P is the test_point
         '''
         Test if lazor pass through the test point
         '''
         x1, y1 = test_point
         k, b = Lazor.line(self)
-        direction = Lazor.lazor_direction(self)
+        direction = Lazor.lazor_direction(self)  # a tuple
         distance = k * x1 - y1 + b
         if test_point == self.start:
             return True
         else:
             sx, sy = self.start
-            x_dis = x1-sx
-            y_dis = y1-sy
-            abs_x_dis = abs(x_dis)
-            abs_y_dis = abs(y_dis)
-            test_direction = (x_dis/abs_x_dis, y_dis/abs_y_dis)
+            x_dif = x1-sx
+            y_dif = y1-sy
+            abs_x_dif = abs(x_dif)
+            abs_y_dif = abs(y_dif)
+            test_direction = (x_dif/abs_x_dif, y_dif/abs_y_dif)
 
             if distance == 0 and test_direction == direction:
                 return True
             else:
                 return False
 
-        def lazor_direction(self):
+    def lazor_direction(self):
         return (self.finish[0]-self.start[0], self.finish[1]-self.start[1])
 
     # def reflect_block(self, direction, grid):
@@ -279,15 +291,23 @@ def read_input_file(board):
     board_open = open(board, 'r')
     # read board file
     board_open = board_open.readlines()
+    # print(board_open)
+    # print("\n")
     # remove \n from each line
     # Source below
     # https://stackoverflow.com/questions/9347419/python-strip-with-n
     board_open = [line.replace('\n', '')
                   for line in board_open if line != '\n']
+    ######Logic here??? replace the \n in each sentence            
+    # print(board_open)
+    # print('\n')
 
-    # Create grid
+    # Create grid; search element key word
     grid_start = board_open.index('GRID START')
+    # print(grid_start)
+    # print('\n')
     grid_end = board_open.index("GRID STOP")
+    # print(grid_end)
     grid_text = [line.replace(' ', '')
                  for line in board_open[grid_start + 1:grid_end]]
     # print("GRID TEXT: ")
@@ -298,7 +318,9 @@ def read_input_file(board):
     # (https://stackoverflow.com/questions/7108080/
     # python-get-the-first-character-of-the-first-string-in-a-list)
     grid_x_len = len(grid_text[0])
+    # print(grid_x_len)
     grid_y_len = len(grid_text)
+    # print(grid_y_len)
     # convert grid text size to actual grid size
     grid_x_len = grid_x_len * 2 + 1
     grid_y_len = grid_y_len * 2 + 1
@@ -320,29 +342,35 @@ def read_input_file(board):
         grid_line = [0]
         # print("TEST GRID LINE")
         # print(grid_line)
-        # print("\n")
+        print("\n")
         # grid_text_x = 1
         for letter in line:
             # put letter into correct size grid
             grid_line.append(letter)
             grid_line.append(0)
         # increment
+        print("Grid Line")
+        print(grid_line)# 4 lines of [0 o 0 o]
+        print('\n')
         grid[grid_text_y] = grid_line
         grid_text_y = grid_text_y + 2
+        #Every other line show the result
 
     # index rest of .bff file to find
     # block count, lazor, and interesct points
 
     for line in board_open[grid_end:]:
+    	# Start here we deal with fixed blocks, L and P
         # if the beginning of the line isn't in
         # a block name, it must be lazor info
         # or intersecting point info
         if not line[0] in block_count_names:
-            if line[0] == 'L':
+            if line[0] == 'L':  # A list
                 lazor_list_read.append(
                     [tuple(map(int, line.replace('L', '').split()[s:s + 2]))
-                     for s in [0, 2]])
-            elif line[0] == 'P':
+                     for s in [0, 2]])# Seperating into two parts: initial and direction
+                #######seems like s in [0,1] or [0,1] is same
+            elif line[0] == 'P':  # is a list
                 intersect_points.append(
                     tuple(map(int, line.replace('P', '').split())))
         # if line starts with block letter
@@ -354,6 +382,7 @@ def read_input_file(board):
     print(block_count)
     print(intersect_points)
     # This is the original start point and move direction
+    print("\nLazor list read: ")
     print(lazor_list_read)
     return (grid, block_count, intersect_points, lazor_list_read,
             grid_x_len, grid_y_len)
@@ -396,13 +425,13 @@ def out_to_solution(board, solution, grid):
     name = board.split('.')[0].split(os.sep)[1]
     file_1 = open(outpot, 'w')
     file_1.write("Plese look at the solution for %s \n" % name)
-    for sol in solution:
-        c = s[0]
-        grid[c[1]][c[0]] = sol[1]
-    for i in grid:
-        for xi in i:
-            file_1.write(xi + '\t')
-        file_1.write('\n')
+    # for sol in solution:
+    #     c = s[0]
+    #     grid[c[1]][c[0]] = sol[1]
+    # for i in grid:
+    #     for xi in i:
+    #         file_1.write(xi + '\t')
+    #     file_1.write('\n')
     file_1.close()
     print('Solution: %s and output file: %s. \n' % (name, output))
 
@@ -432,4 +461,4 @@ def board_solver_process(board):
 
 
 if __name__ == '__main__':
-    read_input_file('mad_1.bff')
+    read_input_file('mad_7.bff')
