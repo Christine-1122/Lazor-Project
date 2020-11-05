@@ -49,6 +49,10 @@ UNIT TEST:
   Iterations = 2
   Time Elapsed = 0.0005657672882080078 s
   
+    - For 'dark_1.bff':
+  Iterations = 13
+  Time Elapsed = 0.0005540847778320312 s
+  
   
 Output solution:
 ---------------
