@@ -46,3 +46,10 @@ UNIT TEST:
   - For 'tiny_5.bff':
   Iterations = 2
   Time Elapsed = 0.0005657672882080078 s
+  
+  
+Output solution:
+---------------
+
+A, B, C in output solution showed reflect block, opaque block and refract block.
+x is the fixed block which means no block is allowed here.
