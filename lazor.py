@@ -471,8 +471,9 @@ def start_solve():
     if run_github == 'yes':
         print("Are all files in the correct folder?")
         print("The files are tiny_5.bff, mad_1.bff")
-        print("mad_4.bff, mad_7.bff, numbered_6.bff")
-        print("and yarn_5.bff. Confirm with yes or no")
+        print("mad_4.bff, mad_7.bff, numbered_6.bff,")
+        print("yarn_5.bff and dark_1.")
+        print("Confirm with yes or no")
         all_boards = input()
         if all_boards == 'yes':
             board_solver_process("tiny_5.bff")
@@ -481,6 +482,7 @@ def start_solve():
             board_solver_process("mad_7.bff")
             board_solver_process("numbered_6.bff")
             board_solver_process("yarn_5.bff")
+            board_solver_process("dark_1.bff")
         else:
             print("move files to correct folder")
             print("and try again")
