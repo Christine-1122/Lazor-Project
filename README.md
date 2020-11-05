@@ -10,6 +10,8 @@ Run code:
 -------------
 Download all .bff files (dark_1.bff, mad_1.bff, mad_4.bff, mad_7.bff, numbered_6.bff, tiny_5.bff, yarn_5.bff) and lazor.py from github and place code in the same folder
 
+Ignore Code Version Contro folder and it's contents: Lazor_Cam_Delete.py and lazor_git.py. We have deleted these files from Lazor-Project Repository, but they show up in the release. These files were used for sharing code with each other during the project.
+
 To run the solver, run lazpr.py in your terminal and choose your options.
 
 Reply yes or no to the prompts. If you choose yes for running all files from github, the code will run all the .bff files from above assuming they are in the current folder. If you don't have all the code in folder or wish to try the solution on a different file, you may run them individually by replying no to the first prompt and typing the file name you'd like to solve.
