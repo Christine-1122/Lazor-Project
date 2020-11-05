@@ -458,8 +458,44 @@ def board_solver_process(board):
             grid[i_y][i_x] = 'o'
         iterations = iterations + 1
 
+def start_solve():
+    '''
+    starts solving process
+    '''
+    print("You may either run a board file manually by")
+    print("typing it's name or by running all .bff files")
+    print("from github at once. Do you want to run all")
+    print(".bff files from github?")
+    print("Type 'yes' or 'no'")
+    run_github = input()
+    if run_github == 'yes':
+        print("Are all files in the correct folder?")
+        print("The files are tiny_5.bff, mad_1.bff")
+        print("mad_4.bff, mad_7.bff, numbered_6.bff")
+        print("and yarn_5.bff. Confirm with yes or no")
+        all_boards = input()
+        if all_boards == 'yes':
+            board_solver_process("tiny_5.bff")
+            board_solver_process("mad_1.bff")
+            board_solver_process("mad_4.bff")
+            board_solver_process("mad_7.bff")
+            board_solver_process("numbered_6.bff")
+            board_solver_process("yarn_5.bff")
+        else:
+            print("move files to correct folder")
+            print("and try again")
+    elif run_github == 'no':
+        print("Type the name of your file")
+        print("for example, for mad_1.bff")
+        print("Type: mad_1.bff")
+        input_file = input()
+        board_solver_process(input_file)
+    else:
+        print("Only options are yes or no")
+
 
 if __name__ == '__main__':
+    start_solve()
     # read_input_file("l.py" #This is checking assert use correctly
     # board_solver_process("tiny_5.bff")
     # board_solver_process("mad_1.bff")
