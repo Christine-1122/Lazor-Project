@@ -4,13 +4,14 @@ Group Members: Tianxin Zhang & Cameron Czerpak
 
 Files included:
 
-Instructions: 
+##Instructions: 
   read_input_file function used for opening and reading the files, based on the line differences with different elements, we could return a grid for each file.
   Adding 0 for half steps as in the instructions.
   
   
 
-UNIT TEST: Time Elapsed and Iterations for each file:
+##UNIT TEST: Time Elapsed and Iterations for each file:
+
 For 'mad_1.bff' file:
   Iterations = 4375
   Time Elapsed = 0.06883692741394043 s
