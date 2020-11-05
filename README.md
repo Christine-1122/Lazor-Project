@@ -1,14 +1,16 @@
 # Lazor-Project
 
-This is software carpentry lazor project on Github.
-The goal of this project is find lazor game solution automatically
-Group Members: Tianxin Zhang & Cameron Czerpak
+- This is software carpentry lazor project on Github.
+
+- The goal of this project is find lazor game solution automatically
+
+- Group Members: Tianxin Zhang & Cameron Czerpak
 
 Run code:
 -------------
 Using python 3.7 to fun the code
 
-Files included:
+Files included: Based on instruction
 
 Instructions: 
 -----------------
