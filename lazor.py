@@ -1,10 +1,9 @@
+
 '''
 Software Carpentry Lazor Project
 EN.540.635
 Tianxin Zhang & Cameron Czerpak
-This is the final version
 '''
-
 import numpy as np
 import time
 import random
@@ -271,6 +270,9 @@ def read_input_file(board):
         o_locations: *list*
             (x,y) locations 'o's on grid where A,B, and C can go
     '''
+    # Checking if a function is in .bff files
+    assert board.split(
+        '.')[1] == '.bff', "Input files have to be in .bff version"
     # set up our lists and dictionaries
     block_count = {'A': 0,
                    'B': 0,
@@ -284,6 +286,8 @@ def read_input_file(board):
 
     # open .bff file
     board_open = open(board, 'r')
+
+    # print(board.split('.')[1])
     # read board file
     board_open = board_open.readlines()
     # remove \n from each line
@@ -356,7 +360,7 @@ def read_input_file(board):
     lazors = []
     for lazor_index in lazor_list_read:
         lazors.append(Lazor_class(lazor_index[0], lazor_index[1]))
-
+    # assert board.split('.')[1] != '.bff', "Input files have to be in .bff version"
     return (grid, block_count, intersect_points, lazors, o_locations)
 
 
@@ -456,7 +460,8 @@ def board_solver_process(board):
 
 
 if __name__ == '__main__':
-    board_solver_process("tiny_5.bff")
+    # read_input_file("l.py" #This is checking assert use correctly
+    # board_solver_process("tiny_5.bff")
     # board_solver_process("mad_1.bff")
     # board_solver_process("mad_4.bff")
     # board_solver_process("mad_7.bff")
