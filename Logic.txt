@@ -1,3 +1,2 @@
 Write here any notes for logic algorithms here
-Find a way to eliminate those 0 
-otherwise it is hard to read the position right now since it is not directly point out the solution
+
