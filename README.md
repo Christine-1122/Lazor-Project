@@ -8,7 +8,7 @@
 
 Run code:
 -------------
-
+To run the solver, open lazor.py and the unit test is in the __main__function
 
 Using python 3.7 to fun the code
 
@@ -53,5 +53,5 @@ UNIT TEST:
 Output solution:
 ---------------
 
-A, B, C in output solution showed reflect block, opaque block and refract block.
-x is the fixed block which means no block is allowed here.
+- A, B, C in output solution showed reflect block, opaque block and refract block.
+- x:the fixed block which means no block is allowed here.
