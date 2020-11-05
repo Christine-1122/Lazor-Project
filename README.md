@@ -1,6 +1,7 @@
 # Lazor-Project
-=================
+
 This is software carpentry lazor project on Github.
+The goal of this project is find lazor game solution automatically
 Group Members: Tianxin Zhang & Cameron Czerpak
 
 Run code:
@@ -11,8 +12,8 @@ Files included:
 
 Instructions: 
 -----------------
-  read_input_file function used for opening and reading the files, based on the line differences with different elements, we could return a grid for each file.
-  Adding 0 for half steps as in the instructions.
+  - read_input_file function used for opening and reading the files, based on the line differences with different elements, we could return a grid for each file.
+    Adding 0 for half steps as in the instructions.
   
   
 
