@@ -54,4 +54,4 @@ Output solution:
 ---------------
 
 - A, B, C in output solution showed reflect block, opaque block and refract block.
-- x:the fixed block which means no block is allowed here.
+- x: the fixed block which means no block is allowed here.
