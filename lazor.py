@@ -1,4 +1,3 @@
-
 '''
 Software Carpentry Lazor Project
 EN.540.635
@@ -271,8 +270,6 @@ def read_input_file(board):
             (x,y) locations 'o's on grid where A,B, and C can go
     '''
     # Checking if a function is in .bff files
-    assert board.split(
-        '.')[1] == '.bff', "Input files have to be in .bff version"
     # set up our lists and dictionaries
     block_count = {'A': 0,
                    'B': 0,
@@ -285,7 +282,11 @@ def read_input_file(board):
     intersect_points = []
 
     # open .bff file
-    board_open = open(board, 'r')
+    try:
+        board_open = open(board, 'r')
+    except OSError:
+        print("File does not exist in folder")
+        exit()
 
     # print(board.split('.')[1])
     # read board file
@@ -297,6 +298,8 @@ def read_input_file(board):
                   for line in board_open if line != '\n']
     # Start with making grid
     # Create grid
+    assert 'GRID START' in board_open, "GRID START missing from file"
+    assert 'GRID STOP' in board_open, "GRID STOP missing from file"
     grid_start = board_open.index('GRID START')
     grid_end = board_open.index("GRID STOP")
     grid_text = [line.replace(' ', '')
@@ -337,7 +340,7 @@ def read_input_file(board):
         # increment
         grid[grid_text_y] = grid_line
         grid_text_y = grid_text_y + 2
-
+    assert o_locations != [], "no locations to place blocks in .bff file"
     # index rest of .bff file to find
     # block count, lazor, and interesct points
     for line in board_open[grid_end:]:
@@ -357,10 +360,12 @@ def read_input_file(board):
         if line[0] in block_count_names:
             # add number of block type to dictionary
             block_count[line[0]] = int(line[2])
+
+    assert intersect_points != [], "Check .bff file for P values"
     lazors = []
     for lazor_index in lazor_list_read:
         lazors.append(Lazor_class(lazor_index[0], lazor_index[1]))
-    # assert board.split('.')[1] != '.bff', "Input files have to be in .bff version"
+    assert lazors != [], "lazors are missing from .bff file"
     return (grid, block_count, intersect_points, lazors, o_locations)
 
 
@@ -458,9 +463,16 @@ def board_solver_process(board):
             grid[i_y][i_x] = 'o'
         iterations = iterations + 1
 
+
 def start_solve():
     '''
-    starts solving process
+    Starts solving process. Allows for user input
+    and or using the standard boards for calling
+    board_solver_process
+    ** Parameters **
+        None
+    ** Returns **
+        None
     '''
     print("You may either run a board file manually by")
     print("typing it's name or by running all .bff files")
@@ -498,7 +510,6 @@ def start_solve():
 
 if __name__ == '__main__':
     start_solve()
-    # read_input_file("l.py" #This is checking assert use correctly
     # board_solver_process("tiny_5.bff")
     # board_solver_process("mad_1.bff")
     # board_solver_process("mad_4.bff")
